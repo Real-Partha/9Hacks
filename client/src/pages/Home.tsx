@@ -100,6 +100,17 @@ const Home: React.FC = () => {
               <p>Expiry: {tokenData.expiry}</p>
             </div>
           )}
+          <button onClick={() => {
+            if (tokenData) {
+              axios.post('http://127.0.0.1:8000/analyze/', { token: tokenData.token,email: profile.email})
+                .then((res) => {
+                  // Handle response
+                })
+                .catch((err) => {
+                  // Handle error
+                });
+            }
+          }}>Send Token</button>
           <button onClick={logOut}>Log out</button>
         </div>
       ) : (
