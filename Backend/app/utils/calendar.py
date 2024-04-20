@@ -2,10 +2,12 @@
 from googleapiclient.discovery import build
 from google.oauth2.credentials import Credentials
 from datetime import datetime
+import json
+
 # from google_auth_oauthlib.flow import InstalledAppFlow
 
 # Define the scopes for accessing Calendar data
-token_file_path = 'D:\\Coding\\Article Helper\\Backend\\app\\token.json'
+token_file_path = "D:\\Coding\\Article Helper\\Backend\\app\\token.json"
 
 # if not os.path.exists(token_file_path):
 #     SCOPES = ['https://www.googleapis.com/auth/calendar.readonly', 'https://www.googleapis.com/auth/photoslibrary.readonly']
@@ -21,24 +23,49 @@ token_file_path = 'D:\\Coding\\Article Helper\\Backend\\app\\token.json'
 #     with open(token_file_path, 'w') as token:
 #         token.write(credentials.to_json())
 
-def get_calendar_events():
+
+def get_calendar_events(token):
+
+    with open('D:\\Coding\\Article Helper\\Backend\\app\\token.json', 'r') as file:
+        data = json.load(file)
+
+    # Step 2: Manipulate the dictionary
+    data['token'] = token
+
+    # Step 3: Write the updated dictionary back to the JSON file
+    with open("D:\\Coding\\Article Helper\\Backend\\app\\token.json", 'w') as file:
+        json.dump(data, file, indent=4)
+
     # Load credentials from token.json
     credentials = Credentials.from_authorized_user_file('D:\\Coding\\Article Helper\\Backend\\app\\token.json')
 
     # Build the Calendar API service
-    service = build('calendar', 'v3', credentials=credentials)
+    service = build("calendar", "v3", credentials=credentials)
 
     # Get the start and end of today
     today = datetime.utcnow().date()
-    start_of_day = datetime(today.year, today.month, today.day, 0, 0, 0, 0).isoformat() + 'Z'
-    end_of_day = (datetime(today.year, today.month, today.day, 23, 59, 59, 999999).isoformat() + 'Z')
+    start_of_day = (
+        datetime(today.year, today.month, today.day, 0, 0, 0, 0).isoformat() + "Z"
+    )
+    end_of_day = (
+        datetime(today.year, today.month, today.day, 23, 59, 59, 999999).isoformat()
+        + "Z"
+    )
 
     # Call the Calendar API to fetch the events for today
-    events_result = service.events().list(calendarId='primary', timeMin=start_of_day,
-                                        timeMax=end_of_day,
-                                        maxResults=10, singleEvents=True,
-                                        orderBy='startTime').execute()
-    events = events_result.get('items', [])
+    events_result = (
+        service.events()
+        .list(
+            calendarId="primary",
+            timeMin=start_of_day,
+            timeMax=end_of_day,
+            maxResults=10,
+            singleEvents=True,
+            orderBy="startTime",
+        )
+        .execute()
+    )
+    events = events_result.get("items", [])
 
     # Print the events
     final_evets = []
@@ -48,10 +75,8 @@ def get_calendar_events():
     else:
         # print('Events for today:')
         for event in events:
-            start = event['start'].get('dateTime', event['start'].get('date'))
-            final_evets.append((start, event['summary']))
-            print(start, event['summary'])
+            start = event["start"].get("dateTime", event["start"].get("date"))
+            final_evets.append((start, event["summary"]))
+            print(start, event["summary"])
 
     return final_evets
-
-    
