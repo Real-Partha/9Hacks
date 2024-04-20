@@ -17,6 +17,9 @@ module.exports = {
       },
     },
     extend: {
+      fontFamily:{
+        custom:"Dancing Script"
+      },
       keyframes: {
         "accordion-down": {
           from: { height: "0" },

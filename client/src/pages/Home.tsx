@@ -8,6 +8,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import React, { useState, useEffect } from 'react'
 import { googleLogout, useGoogleLogin, CodeResponse } from '@react-oauth/google'
 import axios from 'axios'
+import Landing from '@/components/landing'
 
 interface UserProfile {
   picture: string
@@ -83,25 +84,7 @@ const Home: React.FC = () => {
   return (
     <div>
       {profile ? (
-        <div>
-          <img src={profile.picture} alt="user image" />
-          <h3>User Logged in</h3>
-          <p>Name: {profile.name}</p>
-          <p>Email Address: {profile.email}</p>
-          <br />
-          <br />
-          {tokenData && (
-            <div>
-              <p>Token: {tokenData.token}</p>
-              <p>Token URI: {tokenData.token_uri}</p>
-              <p>Client ID: {tokenData.client_id}</p>
-              <p>Client Secret: {tokenData.client_secret}</p>
-              <p>Scopes: {tokenData.scopes}</p>
-              <p>Expiry: {tokenData.expiry}</p>
-            </div>
-          )}
-          <button onClick={logOut}>Log out</button>
-        </div>
+        <Landing logout={logOut} />
       ) : (
         <div className="flex flex-col border-slate-100 items-center h-[100vh] justify-center">
           <div>
